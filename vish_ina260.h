@@ -104,11 +104,18 @@ typedef enum _alert_latch {
  *    @brief  Class that stores state and functions for interacting with
  *            INA260 Current and Power Sensor
  */
-class Adafruit_INA260 {
+class vish_INA260
+{
 public:
-  Adafruit_INA260();
-  bool begin(uint8_t i2c_addr = INA260_I2CADDR_DEFAULT,
-             i2c_inst_t* i2c_port = i2c0);
+  vish_INA260();
+  bool begin(
+    uint8_t i2c_addr = INA260_I2CADDR_DEFAULT,
+    i2c_inst_t* i2c_port = i2c0,
+    uint speed = 400*1000,
+    uint8_t I2C_SDA = 0,
+    uint8_t I2C_SCL = 1,
+    bool PullUp_Enable = false);
+
   void reset(void);
   float readCurrent(void);
   float readBusVoltage(void);
@@ -134,15 +141,17 @@ public:
   void setVoltageConversionTime(INA260_ConversionTime time);
   INA260_AveragingCount getAveragingCount(void);
   void setAveragingCount(INA260_AveragingCount count);
-/*
-  vish_I2CRegister *Config, ///< BusIO Register for Config
-      *MaskEnable,              ///< BusIO Register for MaskEnable
-      *AlertLimit;              ///< BusIO Register for AlertLimit
-*/
-/*
+
+  vish_BusIO_Register* Config;      ///< BusIO Register for Config
+  vish_BusIO_Register* MaskEnable;  ///< BusIO Register for MaskEnable
+  vish_BusIO_Register* AlertLimit;  ///< BusIO Register for AlertLimit
+
+
 private:
-  vish_i2cdev INA260_I2C;
-*/
+  vish_i2cdev* INA260_I2C;
+  uint8_t _i2c_addr, _I2C_SDA, _I2C_SCL;
+  bool _PullUp_Enable;
+  uint _speed;
 };
 
 #endif // _VISH_INA260_H
